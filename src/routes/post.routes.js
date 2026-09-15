@@ -1,9 +1,10 @@
 import express from "express";
 import jwt from "jsonwebtoken";
+import userModel from "../models/user.model.js";
 
 const router = express.Router();
 
-router.post("/create",(req,res)=>{
+router.post("/create",async(req,res)=>{
   const token = req.cookies.token;
 
   if (!token){
@@ -12,7 +13,15 @@ router.post("/create",(req,res)=>{
     })
   }
 try{
-    jwt.verify(token,  process.env.JWT_SECRET,)
+   const decoded= jwt.verify(token,  process.env.JWT_SECRET,)
+   console.log(decoded);
+
+   const user = await userModel.findOne({
+    _id: decoded.id
+   })
+   console.log(user);
+   
+   
 }catch(err){
     return res.status(409).json({
 
